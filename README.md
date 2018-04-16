@@ -1,0 +1,1 @@
+Tool for testing Drupalgeddon2 (CVE-2018-7600) vulnerability. Works for Drupal 7 and Drupal 8.
